@@ -1,0 +1,103 @@
+.home-page-main-container {
+  background-color: #f4f3ff;
+  padding: 0 76px;
+  height: 100vh;
+}
+
+.blog-image-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 64px;
+  margin-bottom: 64px;
+}
+
+.blog-image-title h1 {
+  font-family: "FiraGO";
+  font-weight: bold;
+  font-size: 64px;
+  line-height: 72px;
+  color: #1a1a1f;
+}
+
+.category-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.category-container button,
+.blog-category-btn {
+  border: none;
+  padding: 8px 16px;
+  margin-right: 24px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  font-family: "FiraGO";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.blog-card-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-contaner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three columns with equal width */
+  gap: 32px; /* Adjust the gap between cards */
+  padding: 64px 0;
+}
+
+.blog-author {
+  margin: 24px 0 8px 0;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #1a1a1f;
+}
+
+.blog-date {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #85858d;
+  margin-bottom: 16px;
+}
+
+.blog-title {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  color: #1a1a1f;
+  margin-bottom: 16px;
+}
+
+.blog-categories-cont {
+  display: flex;
+}
+.blog-description {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 28px;
+  color: #404049;
+  margin-bottom: 16px;
+}
+
+.view-all-contaner {
+  display: flex;
+}
+.view-all-btn {
+  border: none;
+  background-color: transparent;
+  color: #5d37f3;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  margin-right: 4px;
+}

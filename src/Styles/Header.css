@@ -1,0 +1,130 @@
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 76px;
+}
+
+header button {
+  font-family: "FiraGo";
+  padding: 10px 20px;
+  background-color: #5d37f3;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.modal-container {
+  width: 480px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.close-icon {
+  float: right;
+}
+
+.modal-title {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #1a1a1f;
+}
+
+.email-label {
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #1a1a1f;
+}
+
+.email-input {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1.5px solid #5d37f3;
+  outline: none;
+  background-color: #f7f7ff;
+  color: #85858d;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.email-submit-btn {
+  margin-top: 24px;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #5d37f3;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+.ok-btn {
+  margin-top: 24px;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #5d37f3;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.email-error-cont {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.email-error-cont p {
+  color: #ea1919;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.succesContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  flex-direction: column;
+}
+
+.succesContainer img {
+  margin-bottom: 20px;
+}
+
+.succesContainer p {
+  color: #1a1a1f;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+}
