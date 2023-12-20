@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../assets/LOGO-02 3.svg";
 import "../Styles/Header.css";
 import Modal from "@mui/material/Modal";
@@ -7,14 +7,16 @@ import errorIcon from "../assets/error-infoIcon.svg";
 import api from "../Api/GetData";
 import succesIcon from "../assets/tick-circle.svg";
 import { Link } from "react-router-dom";
+import { context } from "../App";
 
 export default function Header() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
-  const [userLogin, setUserLogin] = useState(false);
+
+  const loginContext = useContext(context)
 
   const token =
     "4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
@@ -37,7 +39,7 @@ export default function Header() {
     try {
       const response = await api.post("/login", { email: email });
 
-      setUserLogin(true);
+      loginContext.setUserLogin(true);
       console.log(response);
     } catch (error) {
       console.log(error);
@@ -47,7 +49,7 @@ export default function Header() {
   return (
     <header>
       <img src={logo} alt="logo" />
-      {userLogin ? (
+      {loginContext.userLogin ? (
         <Link to={"/add-blog"}>
           <button>დაამატე ბლოგი</button>
         </Link>
@@ -57,7 +59,7 @@ export default function Header() {
       <Modal open={open} onClose={handleClose}>
         <div className="modal-container">
           <img className="close-icon" src={closeIcon} alt="closeIcon" />
-          {userLogin ? (
+          {loginContext.userLogin ? (
             <>
               <div className="succesContainer">
                 <img src={succesIcon} alt="succesIcon" />
@@ -87,7 +89,7 @@ export default function Header() {
                     <p>{error}</p>
                   </div>
                 )}
-                <button className="email-submit-btn" type="submit">
+                <button onClick={()=>loginContext.handleLogin()} className="email-submit-btn" type="submit">
                   შესვლა
                 </button>
               </form>
