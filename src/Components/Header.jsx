@@ -20,30 +20,22 @@ export default function Header() {
 
   const token =
     "4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
-
-  const validateEmail = () => {
     const emailRegex = /^[a-zA-Z0-9._-]+@redberry\.ge$/;
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!emailRegex.test(email)) {
       setError("ელ-ფოსტა არ მოიძებნა");
     } else {
       setError("");
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    validateEmail();
-
-    try {
       const response = await api.post("/login", { email: email });
 
       loginContext.setUserLogin(true);
       console.log(response);
-    } catch (error) {
-      console.log(error);
     }
+    
+
+   
   };
 
   return (
@@ -82,6 +74,7 @@ export default function Header() {
                   className="email-input"
                   type="text"
                   placeholder="Example@redberry.ge"
+                  value={email}
                 />
                 {error && (
                   <div className="email-error-cont">
@@ -89,7 +82,7 @@ export default function Header() {
                     <p>{error}</p>
                   </div>
                 )}
-                <button onClick={()=>loginContext.handleLogin()} className="email-submit-btn" type="submit">
+                <button  className="email-submit-btn" type="submit">
                   შესვლა
                 </button>
               </form>
