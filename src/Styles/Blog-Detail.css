@@ -1,0 +1,120 @@
+.blog-Detail-main-container {
+  padding: 40px 76px;
+  background-color: #f4f3ff;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+}
+
+.blog-Detail-main-container-main {
+  background-color: #f4f3ff;
+  padding: 40px 76px;
+}
+
+.blog-detail-container {
+  padding: 0 13%;
+  width: 100%;
+}
+
+.detail-page-image {
+  width: 100%;
+  height: 328px;
+  object-fit: cover;
+  margin-bottom: 40px;
+  border-radius: 12px;
+}
+
+.blog-detail-category-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.blog-detail-category-container button,
+.similar-categories {
+  margin-right: 18px;
+  margin-top: 24px;
+  padding: 6px 10px;
+  border-radius: 30px;
+  border: none;
+}
+
+.blog-detail-container h3 {
+  margin-bottom: 8px;
+  color: #1a1a1f;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.blog-detail-container h5 {
+  color: #85858d;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+
+.blog-detail-container h2 {
+  color: #1a1a1f;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: bold;
+}
+
+.blog-detail-container p {
+  color: #404049;
+  font-size: 16px;
+  line-height: 28px;
+  margin-top: 40px;
+  font-weight: 400;
+}
+
+.similar-blog-img {
+  width: 100%;
+  height: 328px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.similar-blog-title {
+  color: #1a1a1f;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.similar-blog-container h4 {
+  color: #1a1a1f;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.similar-blog-container span {
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #85858d;
+}
+
+.similar-blog-container h3 {
+  color: #1a1a1f;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+}
+.similar-categories {
+  margin-bottom: 16px;
+}
+
+.similar-blog-container p {
+  color: #404049;
+  font-size: 16px;
+  line-height: 28px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}

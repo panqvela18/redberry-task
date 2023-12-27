@@ -11,6 +11,9 @@ import Cookies from "js-cookie";
 import errorIcon from "../assets/error-infoIcon.svg";
 import picIcon from "../assets/gallery.svg";
 import closeBtn from "../assets/Xicon.svg";
+import categoryXicon from "../assets/categoryXIcon.svg";
+import { Modal } from "@mui/material";
+import checked from "../assets/tick-circle.svg";
 
 export default function AddBlog() {
   const currentDate = new Date();
@@ -25,37 +28,110 @@ export default function AddBlog() {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [emailIsGood, setEmailIsGood] = useState(false);
+  const [emailIsGood, setEmailIsGood] = useState(0);
   const [imageFile, setImageFile] = useState("");
+  const [allRigth, setAllRigth] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
 
-  console.log(emailError);
+  console.log(selectedCategoriesId)
+
+  const token =
+"4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
+
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+    setEmailInput("");
+    setSelectedCategories([]);
+    setImageFile("");
+    setSelectedDate(initialDate);
+    setAuthorInput("");
+    setTitleInput("");
+    setDescriptionTextarea("");
+  };
+
+  useEffect(() => {
+    const ids = categories
+      .filter((item) => selectedCategories.includes(item.title))
+      .map((item) => item.id);
+
+    setSelectedCategoriesId(ids);
+  }, [selectedCategories, categories]);
+
+  const handleCategoryClick = (category) => {
+    // Check if the maximum number of categories is already selected
+    if (selectedCategories.length < 4) {
+      // Check if the category is already in the selectedCategories array
+      if (!selectedCategories.includes(category)) {
+        // If not, add it to the array
+        setSelectedCategories([...selectedCategories, category]);
+      }
+    }
+  };
+  
+
+  const getCategoryStyles = (categoryTitle) => {
+    const category = categories.find((c) => c.title === categoryTitle);
+    return {
+      backgroundColor: category?.background_color || "defaultBackgroundColor",
+      color: category?.text_color || "defaultTextColor",
+    };
+  };
+
+  const handleCategoryClose = (category) => {
+    // Filter out the selected category from the array
+    const updatedCategories = selectedCategories.filter(
+      (selectedCategory) => selectedCategory !== category
+    );
+    setSelectedCategories(updatedCategories);
+  };
 
   const validateEmail = () => {
     const emailRegex = /^[a-zA-Z0-9._-]+@redberry\.ge$/;
 
     if (emailRegex.test(emailInput)) {
-      setEmailIsGood(true);
+      setEmailIsGood(2);
       setEmailError("");
+      return true;
     } else {
-      setEmailIsGood(false);
+      setEmailIsGood(1);
       setEmailError("ელ-ფოსტა არ მოიძებნა");
+      return false;
     }
   };
 
-  useEffect(() => {
-    validateEmail();
-  }, [emailInput]);
+  // useEffect(() => {
+  //   validateEmail();
+  // }, [emailInput]);
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value);
   };
 
+  const handleAuthorInputChange = (e) => {
+    const value = e.target.value;
+    const trimmedString = value.split(/\s+/).join(" ");
+    setAuthorInput(trimmedString);
+  };
+
+  const handleTitleInputChange = (e) => {
+    const value = e.target.value;
+    const trimmedString = value.split(/\s+/).join(" ");
+    setTitleInput(trimmedString);
+  };
+
+  const handleTextAreaChange = (e) => {
+    const value = e.target.value;
+    const trimmedString = value.split(/\s+/).join(" ");
+    setDescriptionTextarea(trimmedString);
+  };
   const AUTHOR_COOKIE = "authorInput";
   const TITLE_COOKIE = "titleInput";
   const DESCRIPTION_COOKIE = "descriptionTextarea";
   const DATE_COOKIE = "selectedDate";
   const EMAIL_COOKIE = "emailInput";
-  
-
+  const SELECTED_CATEGORIES_COOKIE = "selectedCategories";
+  const SELECTED_CATEGORIES_ID_COOKIE = "selectedCategoriesId";
 
   useEffect(() => {
     const authorCookie = Cookies.get(AUTHOR_COOKIE);
@@ -63,11 +139,22 @@ export default function AddBlog() {
     const descriptionCookie = Cookies.get(DESCRIPTION_COOKIE);
     const dateCookie = Cookies.get(DATE_COOKIE);
     const emailCookie = Cookies.get(EMAIL_COOKIE);
+    const selectedCategoriesCookie = Cookies.get(SELECTED_CATEGORIES_COOKIE);
+    const selectedCategoriesIdCookie = Cookies.get(
+      SELECTED_CATEGORIES_ID_COOKIE
+    );
+
+    setSelectedCategories(
+      selectedCategoriesCookie ? JSON.parse(selectedCategoriesCookie) : []
+    );
+    setSelectedCategoriesId(
+      selectedCategoriesIdCookie ? JSON.parse(selectedCategoriesIdCookie) : []
+    );
 
     setAuthorInput(authorCookie || "");
     setTitleInput(titleCookie || "");
     setDescriptionTextarea(descriptionCookie || "");
-    setSelectedDate(dateCookie || null);
+    setSelectedDate(dateCookie || initialDate);
     setEmailInput(emailCookie || "");
   }, []);
 
@@ -92,7 +179,17 @@ export default function AddBlog() {
     Cookies.set(EMAIL_COOKIE, emailInput);
   }, [emailInput]);
 
-  console.log(selectedDate);
+  useEffect(() => {
+    Cookies.set(SELECTED_CATEGORIES_COOKIE, JSON.stringify(selectedCategories));
+  }, [selectedCategories]);
+
+  useEffect(() => {
+    Cookies.set(
+      SELECTED_CATEGORIES_ID_COOKIE,
+      JSON.stringify(selectedCategoriesId)
+    );
+  }, [selectedCategoriesId]);
+
   // const userLoginContext = useContext(context)
   // const navigate=useNavigate()
 
@@ -102,7 +199,6 @@ export default function AddBlog() {
   //  }
   // })
 
-  console.log(categories);
 
   const fetchCategories = async () => {
     try {
@@ -118,12 +214,26 @@ export default function AddBlog() {
   }, []);
 
   const handleFileChange = (e) => {
-    // Handle the file change logic here
-    console.log(e.target.files);
-    setImageFile(e.target.files[0]);
+    const file = e.target.files[0];
+  
+    if (file) {
+      setImageFile(file);
+    }
   };
-  const formData = new FormData();
-  formData.append("image", imageFile);
+  
+  
+  //   const handleFileChange = (e) => {
+  //   // Handle the file change logic here
+  //   setImageName(e.target.files[0]);
+
+  //   const reader = new FileReader();
+
+  //   reader.onloadend = () => {
+  //     setImageFile(e.target.files[0]);
+  //   };
+
+  //   reader.readAsDataURL(e.target.files[0]);
+  // };
 
   const isValidGeorgian = (input) => {
     // Georgian script Unicode range: U+10A0 to U+10FF, and allow space
@@ -132,9 +242,66 @@ export default function AddBlog() {
     return georgianScriptRegex.test(input);
   };
 
-  const submitForm = (e) => {
-    e.preventDefault();
-  };
+  useEffect(() => {
+    const isAllRigth =
+      authorInput.length >= 4 &&
+      authorInput.split(" ").filter((word) => word !== "").length > 1 &&
+      isValidGeorgian(authorInput) &&
+      titleInput.length >= 4 &&
+      descriptionTextarea.length >= 4 &&
+      selectedDate &&
+      validateEmail() &&
+      selectedCategories.length > 0 &&
+      imageFile !== "";
+
+    setAllRigth(isAllRigth);
+  }, [
+    authorInput,
+    titleInput,
+    descriptionTextarea,
+    selectedDate,
+    validateEmail,
+    selectedCategories,
+    imageFile,
+  ]);
+
+  const submitForm = async (e) => {
+  e.preventDefault();
+  try {
+    setOpen(true);
+
+    const formData = new FormData();
+    formData.append("title", titleInput);
+    formData.append("description", descriptionTextarea);
+    formData.append("image", imageFile); 
+    formData.append("author", authorInput);
+    formData.append("publish_date", selectedDate);
+    formData.append("categories", JSON.stringify(selectedCategoriesId));
+    formData.append("email", emailInput);
+
+   const response =  await api.post("https://api.blog.redberryinternship.ge/api/blogs", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(response)
+    if(response.status === 204){
+      setEmailInput("");
+      setSelectedCategories([]);
+      setImageFile("");
+      setSelectedDate(initialDate);
+      setAuthorInput("");
+      setTitleInput("");
+      setDescriptionTextarea("");
+    }
+    
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+  
 
   return (
     <>
@@ -145,7 +312,11 @@ export default function AddBlog() {
         <Link to={"/"}>
           <img className="back-arrow" src={backArrow} alt="arrow" />
         </Link>
-        <form onSubmit={submitForm}>
+        <form
+          encType="multipart/form-data"
+          style={{ padding: "0 13%" }}
+          onSubmit={submitForm}
+        >
           <h1 className="add-blog-main-title">ბლოგის დამატება</h1>
           <h5 className="add-blog-title">ატვირთეთ ფოტო *</h5>
           {imageFile === "" ? (
@@ -168,9 +339,13 @@ export default function AddBlog() {
             <div className="uploaded-image-container">
               <div className="image-and-image-name">
                 <img src={picIcon} alt="pic-icon" />
-                <span>{imageFile.name}</span>
+                <span>{imageFile.type}</span>
               </div>
-              <img onClick={()=>setImageFile("")} src={closeBtn} alt="close-btn" />
+              <img
+                onClick={() => setImageFile("")}
+                src={closeBtn}
+                alt="close-btn"
+              />
             </div>
           )}
 
@@ -181,7 +356,7 @@ export default function AddBlog() {
                 className="add-blog-input"
                 type="text"
                 placeholder="შეიყვნეთ ავტორი"
-                onChange={(e) => setAuthorInput(e.target.value)}
+                onChange={handleAuthorInputChange}
                 value={authorInput}
               />
               <ul>
@@ -200,7 +375,8 @@ export default function AddBlog() {
                   style={
                     authorInput.length === 0
                       ? { color: "#85858d" }
-                      : authorInput.includes(" ")
+                      : authorInput.split(" ").filter((word) => word !== "")
+                          .length > 1
                       ? { color: "#14D81C" }
                       : { color: "#EA1919" }
                   }
@@ -226,7 +402,7 @@ export default function AddBlog() {
                 className="add-blog-input"
                 type="text"
                 placeholder="შეიყვნეთ სათაური"
-                onChange={(e) => setTitleInput(e.target.value)}
+                onChange={handleTitleInputChange}
                 value={titleInput}
               />
               <span
@@ -245,7 +421,7 @@ export default function AddBlog() {
           </div>
           <h5 className="add-blog-title">აღწერა *</h5>
           <textarea
-            onChange={(e) => setDescriptionTextarea(e.target.value)}
+            onChange={handleTextAreaChange}
             placeholder="შეიყვნანეთ აღწერა"
             value={descriptionTextarea}
           />
@@ -274,23 +450,36 @@ export default function AddBlog() {
             </div>
             <div className="cont-category">
               <h5 className="add-blog-title">კატეგორია</h5>
-              <div
-                style={{ cursor: "pointer" }}
-                onClick={() => setShowDropDown(!showDropDown)}
-              >
-                <input
-                  placeholder="შეიყვნეთ კატეგორია"
-                  className="date-input"
-                  type="text"
-                  onChange={() => console.log("sadas")}
+              <div style={{ cursor: "pointer" }}>
+                <div className="selectCategory-cont">
+                  {selectedCategories.length === 0
+                    ? "შეიყვნეთ კატეგორია"
+                    : selectedCategories.map((selectCategory) => {
+                        return (
+                          <div
+                            onClick={() => handleCategoryClose(selectCategory)}
+                            className="selected-category-btn"
+                            style={getCategoryStyles(selectCategory)}
+                          >
+                            {selectCategory}{" "}
+                            <img src={categoryXicon} alt="categoryXicon" />
+                          </div>
+                        );
+                      })}
+                </div>
+                <img
+                  onClick={() => setShowDropDown(!showDropDown)}
+                  className="arrow-down"
+                  src={arrowDown}
+                  alt="arrow-down"
                 />
-                <img className="arrow-down" src={arrowDown} alt="arrow-down" />
               </div>
               {showDropDown && (
                 <div className="category-dropDown">
                   {categories.map((category) => {
                     return (
-                      <button
+                      <div
+                        onClick={() => handleCategoryClick(category.title)}
                         className="category-btn"
                         style={{
                           color: category.text_color,
@@ -299,7 +488,7 @@ export default function AddBlog() {
                         key={category.id}
                       >
                         {category.title}
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -314,9 +503,11 @@ export default function AddBlog() {
           </h4>
           <input
             style={
-              emailIsGood
-                ? { border: "1px solid #14D81C" }
-                : { border: "1px solid #EA1919" }
+              emailIsGood === 0
+                ? { border: "1px solid #E4E3EB" }
+                : emailIsGood === 1
+                ? { border: "1px solid #EA1919" }
+                : { border: "1px solid #14D81C" }
             }
             value={emailInput}
             onChange={handleEmailChange}
@@ -331,12 +522,37 @@ export default function AddBlog() {
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className="add-blog-submit-btn" type="submit">
-              გამოქვეყნება
-            </button>
+            {allRigth ? (
+              <button className="add-blog-submit-btn" type="submit">
+                გამოქვეყნება
+              </button>
+            ) : (
+              <button
+                disabled
+                className="add-blog-submit-btn-disable"
+              >
+                გამოქვეყნება
+              </button>
+            )}
           </div>
         </form>
       </main>
+      <Modal open={open} onClose={handleClose}>
+        <div className="add-blog-modal-container">
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <img onClick={handleClose} src={closeBtn} alt="close-btn" />
+          </div>
+          <div className="upload-blog-modal-container">
+            <img src={checked} alt="checked" />
+            <h3>ჩანაწი წარმატებით დაემატა</h3>
+            <button>
+              <Link style={{ color: "white", textDecoration: "none" }} to={"/"}>
+                მთავარ გვერდზე დაბრუნება{" "}
+              </Link>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

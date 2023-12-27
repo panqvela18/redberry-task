@@ -40,11 +40,15 @@ export default function Header() {
 
   return (
     <header>
-      <img src={logo} alt="logo" />
+     <Link to={"/"}> <img src={logo} alt="logo" /></Link>
       {loginContext.userLogin ? (
+        <div>
         <Link to={"/add-blog"}>
           <button>დაამატე ბლოგი</button>
         </Link>
+        <button onClick={()=>loginContext.handleLogout()} style={{marginLeft:"10px"}}>გასვლა</button>
+
+        </div>
       ) : (
         <button onClick={handleOpen}>შესვლა</button>
       )}

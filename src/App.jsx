@@ -4,11 +4,13 @@ import Home from "./Pages/Home";
 import AddBlog from "./Pages/AddBlog";
 import { createContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import BlogDetail from "./Pages/BlogDetail";
 
 export const context = createContext({});
 
 function App() {
-  const [userLogin, setUserLogin] = useState(false);
+  const [userLogin, setUserLogin] = useState("loggedOut");
+
 
   useEffect(() => {
     const storedUserLogin = Cookies.get("userLogin");
@@ -24,14 +26,22 @@ function App() {
     setUserLogin(true);
   };
 
+    // Function to handle logout
+    const handleLogout = () => {
+      // Remove the session cookie (log out)
+      Cookies.set("userLogin","loggedOut");
+      // Update local state
+      setUserLogin(false);
+    };
   console.log(userLogin);
 
   return (
-    <context.Provider value={{ userLogin, setUserLogin, handleLogin }}>
+    <context.Provider value={{ userLogin, setUserLogin, handleLogin,handleLogout }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/add-blog" element={<AddBlog />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
         </Routes>
       </BrowserRouter>
     </context.Provider>
