@@ -19,11 +19,19 @@ export default function Home() {
     if (!selectedCategoriesId.includes(id)) {
       const newSelectedCategories = [...selectedCategoriesId, id];
       setSelectedCategoriesId(newSelectedCategories);
-      localStorage.setItem("selectedCategories", JSON.stringify(newSelectedCategories));
+      localStorage.setItem(
+        "selectedCategories",
+        JSON.stringify(newSelectedCategories)
+      );
     } else {
-      const updatedCategories = selectedCategoriesId.filter((categoryId) => categoryId !== id);
+      const updatedCategories = selectedCategoriesId.filter(
+        (categoryId) => categoryId !== id
+      );
       setSelectedCategoriesId(updatedCategories);
-      localStorage.setItem("selectedCategories", JSON.stringify(updatedCategories));
+      localStorage.setItem(
+        "selectedCategories",
+        JSON.stringify(updatedCategories)
+      );
     }
   };
   useEffect(() => {
@@ -32,7 +40,6 @@ export default function Home() {
       setSelectedCategoriesId(JSON.parse(storedCategories));
     }
   }, []);
-  
 
   const fetchBlogs = async () => {
     try {
@@ -76,24 +83,26 @@ export default function Home() {
           <h1>ბლოგი</h1>
           <img src={blogImage} alt="blogImage" />
         </div>
-        <div className="category-container">
-          {categories.map((category) => {
-            return (
-              <button
-                style={{
-                  color: category.text_color,
-                  backgroundColor: category.background_color,
-                  border: selectedCategoriesId.includes(category.id)
-                    ? "1px solid #000000"
-                    : "none",
-                }}
-                onClick={() => handleCategoryClick(category.id)}
-                key={category.id}
-              >
-                {category.title}
-              </button>
-            );
-          })}
+        <div  className="categories-main-container">
+          <div className="category-container">
+            {categories.map((category) => {
+              return (
+                <button
+                  style={{
+                    color: category.text_color,
+                    backgroundColor: category.background_color,
+                    border: selectedCategoriesId.includes(category.id)
+                      ? "1px solid #000000"
+                      : "none",
+                  }}
+                  onClick={() => handleCategoryClick(category.id)}
+                  key={category.id}
+                >
+                  {category.title}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="card-contaner">
           {(selectedCategoriesId.length === 0
@@ -149,7 +158,7 @@ export default function Home() {
                     }}
                     to={`blog/${blog.id}`}
                   >
-                    <button className="view-all-btn">სრულად ნახვა</button>
+                    <button style={{cursor:"pointer"}} className="view-all-btn">სრულად ნახვა</button>
                   </Link>
                   <img src={arrow} alt="arrow" />
                 </div>

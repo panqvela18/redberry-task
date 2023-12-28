@@ -21,10 +21,31 @@
 
 .category-container {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  flex-wrap: wrap;
-  align-items: center;
+  /* justify-content: space-between; */
+  width: 50%;
+  /* align-items: center; */
+  overflow-x: auto;
+}
+
+.category-container::-webkit-scrollbar {
+  width: 4px; /* Set the width of the scrollbar */
+}
+
+.category-container::-webkit-scrollbar-thumb {
+  background-color: grey; /* Set the color of the scrollbar thumb */
+  border-radius: 8px; /* Set the border-radius of the scrollbar thumb */
+}
+.category-container {
+  scrollbar-width: thin; /* Set the width of the scrollbar */
+}
+
+.category-container::-moz-scrollbar-thumb {
+  background-color: grey; /* Set the color of the scrollbar thumb */
+  border-radius: 8px; /* Set the border-radius of the scrollbar thumb */
+}
+.categories-main-container {
+  display: flex;
+  justify-content: center;
 }
 
 .category-container button,

@@ -10,11 +10,15 @@ import { Navigation } from "swiper/modules";
 
 export default function BlogDetail() {
   const { id } = useParams();
-  const [blogDetails,setBlogDetails]=useState(null)
-  const [error,setError]=useState("")
-  const [blogs,setBlogs]=useState([])
-  
+  const [blogDetails, setBlogDetails] = useState(null);
+  const [error, setError] = useState("");
+  const [blogs, setBlogs] = useState([]);
 
+  const today = new Date().toISOString().split("T")[0];
+
+  const publish_DateFilteredBlogs = blogs
+    .filter((blog) => blog.publish_date <= today)
+    .filter((blog) => blog.id !== blogDetails.id);
 
   const fetchBlogs = async () => {
     try {
@@ -25,9 +29,9 @@ export default function BlogDetail() {
     }
   };
 
-  useEffect(()=>{
-    fetchBlogs()
-  },[])
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
 
   const fetchBlogDetail = async () => {
     try {
@@ -38,17 +42,13 @@ export default function BlogDetail() {
     }
   };
 
-  useEffect(()=>{
-    fetchBlogDetail()
-  },[id])
+  useEffect(() => {
+    fetchBlogDetail();
+  }, [id]);
 
-  console.log(blogDetails)
-
-
-
+  console.log(blogDetails);
 
   console.log(id);
-
 
   return (
     <>
@@ -72,7 +72,13 @@ export default function BlogDetail() {
             <div className="blog-detail-category-container">
               {blogDetails?.categories.map((category) => {
                 return (
-                  <button key={category.id} style={{color:category.text_color,backgroundColor:category.background_color}}>
+                  <button
+                    key={category.id}
+                    style={{
+                      color: category.text_color,
+                      backgroundColor: category.background_color,
+                    }}
+                  >
                     {category.title}
                   </button>
                 );
@@ -90,42 +96,72 @@ export default function BlogDetail() {
             modules={[Navigation]}
             className="mySwiper"
           >
-            {blogs.map((blog) => {
-              return (
-                <SwiperSlide>
-                  {
-                    <div key={blog.id} className="similar-blog-container">
-                      <img
-                        className="similar-blog-img"
-                        src={blog.image}
-                        alt={blog.id}
-                      />
-                      <h4>{blog.author}</h4>
-                      <span>{blog.publish_date}</span>
-                      <h3>{blog.title}</h3>
-                      {blog.categories.map((category) => {
-                        return (
-                          <button
-                            key={category.id}
-                            className="similar-categories"
-                            style={{color:category.text_color,backgroundColor:category.background_color}}
+            {publish_DateFilteredBlogs
+              .filter((blog) =>
+                blogDetails?.categories.some((mainCategory) =>
+                  blog.categories.some(
+                    (category) => category.id === mainCategory.id
+                  )
+                )
+              )
+              .map((blog) => {
+                return (
+                  <SwiperSlide>
+                    {
+                      <div key={blog.id} className="similar-blog-container">
+                        <img
+                          className="similar-blog-img"
+                          src={blog.image}
+                          alt={blog.id}
+                        />
+                        <h4>{blog.author}</h4>
+                        <span>{blog.publish_date}</span>
+                        <h3>{blog.title}</h3>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            maxHeight: "56px",
+                          }}
+                        >
+                          {blog.categories.map((category) => {
+                            return (
+                              <button
+                                key={category.id}
+                                className="similar-categories"
+                                style={{
+                                  color: category.text_color,
+                                  backgroundColor: category.background_color,
+                                }}
+                              >
+                                {category.title}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <p>
+                          {blog.description.split(" ").slice(0, 10).join(" ")}
+                          ...
+                        </p>
+                        <div className="view-all-contaner">
+                          <Link
+                            onClick={() => {
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                            style={{ cursor: "pointer" }}
+                            to={`/blog/${blog.id}`}
                           >
-                            {category.title}
-                          </button>
-                        );
-                      })}
-                      <p>{blog.description}</p>
-                      <div className="view-all-contaner">
-                        <Link onClick={()=>{    window.scrollTo({ top: 0, behavior: "smooth" })}} style={{cursor:"pointer"}} to={`/blog/${blog.id}`}>
-                          <button className="view-all-btn">სრულად ნახვა</button>
-                        </Link>
-                        <img src={arrow} alt="arrow" />
+                            <button style={{cursor:"pointer"}} className="view-all-btn">
+                              სრულად ნახვა
+                            </button>
+                          </Link>
+                          <img src={arrow} alt="arrow" />
+                        </div>
                       </div>
-                    </div>
-                  }
-                </SwiperSlide>
-              );
-            })}
+                    }
+                  </SwiperSlide>
+                );
+              })}
           </Swiper>
         </div>
       </main>

@@ -14,6 +14,7 @@ import closeBtn from "../assets/Xicon.svg";
 import categoryXicon from "../assets/categoryXIcon.svg";
 import { Modal } from "@mui/material";
 import checked from "../assets/tick-circle.svg";
+import axios from "axios";
 
 export default function AddBlog() {
   const currentDate = new Date();
@@ -106,6 +107,7 @@ export default function AddBlog() {
   // }, [emailInput]);
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value);
+    setEmailIsGood(0)
   };
 
   const handleAuthorInputChange = (e) => {
@@ -139,10 +141,12 @@ export default function AddBlog() {
     const descriptionCookie = Cookies.get(DESCRIPTION_COOKIE);
     const dateCookie = Cookies.get(DATE_COOKIE);
     const emailCookie = Cookies.get(EMAIL_COOKIE);
+   //სანახავიაა !!!!
     const selectedCategoriesCookie = Cookies.get(SELECTED_CATEGORIES_COOKIE);
     const selectedCategoriesIdCookie = Cookies.get(
       SELECTED_CATEGORIES_ID_COOKIE
     );
+
 
     setSelectedCategories(
       selectedCategoriesCookie ? JSON.parse(selectedCategoriesCookie) : []
@@ -182,7 +186,7 @@ export default function AddBlog() {
   useEffect(() => {
     Cookies.set(SELECTED_CATEGORIES_COOKIE, JSON.stringify(selectedCategories));
   }, [selectedCategories]);
-
+  
   useEffect(() => {
     Cookies.set(
       SELECTED_CATEGORIES_ID_COOKIE,
@@ -222,18 +226,7 @@ export default function AddBlog() {
   };
   
   
-  //   const handleFileChange = (e) => {
-  //   // Handle the file change logic here
-  //   setImageName(e.target.files[0]);
-
-  //   const reader = new FileReader();
-
-  //   reader.onloadend = () => {
-  //     setImageFile(e.target.files[0]);
-  //   };
-
-  //   reader.readAsDataURL(e.target.files[0]);
-  // };
+  
 
   const isValidGeorgian = (input) => {
     // Georgian script Unicode range: U+10A0 to U+10FF, and allow space
@@ -250,7 +243,6 @@ export default function AddBlog() {
       titleInput.length >= 4 &&
       descriptionTextarea.length >= 4 &&
       selectedDate &&
-      validateEmail() &&
       selectedCategories.length > 0 &&
       imageFile !== "";
 
@@ -260,7 +252,6 @@ export default function AddBlog() {
     titleInput,
     descriptionTextarea,
     selectedDate,
-    validateEmail,
     selectedCategories,
     imageFile,
   ]);
@@ -268,33 +259,27 @@ export default function AddBlog() {
   const submitForm = async (e) => {
   e.preventDefault();
   try {
-    setOpen(true);
-
-    const formData = new FormData();
-    formData.append("title", titleInput);
-    formData.append("description", descriptionTextarea);
-    formData.append("image", imageFile); 
-    formData.append("author", authorInput);
-    formData.append("publish_date", selectedDate);
-    formData.append("categories", JSON.stringify(selectedCategoriesId));
-    formData.append("email", emailInput);
-
-   const response =  await api.post("https://api.blog.redberryinternship.ge/api/blogs", formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    console.log(response)
-    if(response.status === 204){
-      setEmailInput("");
-      setSelectedCategories([]);
-      setImageFile("");
-      setSelectedDate(initialDate);
-      setAuthorInput("");
-      setTitleInput("");
-      setDescriptionTextarea("");
+    if(validateEmail()){
+      setOpen(true);
+      const formData = new FormData();
+      formData.append("title", titleInput);
+      formData.append("description", descriptionTextarea);
+      formData.append("image", imageFile); 
+      formData.append("author", authorInput);
+      formData.append("publish_date", selectedDate);
+      formData.append("categories", JSON.stringify(selectedCategoriesId));
+      formData.append("email", emailInput);
+  
+      await axios.post("https://api.blog.redberryinternship.ge/api/blogs", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }else{
+      setEmailIsGood(1)
     }
+   
     
   } catch (error) {
     console.error("Error:", error);
@@ -339,7 +324,7 @@ export default function AddBlog() {
             <div className="uploaded-image-container">
               <div className="image-and-image-name">
                 <img src={picIcon} alt="pic-icon" />
-                <span>{imageFile.type}</span>
+                <span>{imageFile.name}</span>
               </div>
               <img
                 onClick={() => setImageFile("")}
@@ -447,6 +432,32 @@ export default function AddBlog() {
                 onChange={(e) => setSelectedDate(e.target.value)}
                 value={selectedDate}
               />
+              <h4
+            style={{ marginTop: "24px", marginBottom: "8px" }}
+            className="add-blog-title"
+          >
+            ელ-ფოსტა *
+          </h4>
+          <input
+            style={
+              emailIsGood === 0
+                ? { border: "1px solid #E4E3EB" }
+                : emailIsGood === 1
+                ? { border: "1px solid #EA1919" }
+                : { border: "1px solid #14D81C" }
+            }
+            value={emailInput}
+            onChange={handleEmailChange}
+            className="email-input-blog"
+            type="email"
+            placeholder="Example@redbery.ge"
+          />
+          {emailIsGood === 1 && (
+            <div className="email-error-cont">
+              <img src={errorIcon} alt="error-icon" />
+              <p>ელ-ფოსტა არ მოიძებნა</p>
+            </div>
+          )}
             </div>
             <div className="cont-category">
               <h5 className="add-blog-title">კატეგორია</h5>
@@ -495,32 +506,7 @@ export default function AddBlog() {
               )}
             </div>
           </div>
-          <h4
-            style={{ marginTop: "24px", marginBottom: "8px" }}
-            className="add-blog-title"
-          >
-            ელ-ფოსტა *
-          </h4>
-          <input
-            style={
-              emailIsGood === 0
-                ? { border: "1px solid #E4E3EB" }
-                : emailIsGood === 1
-                ? { border: "1px solid #EA1919" }
-                : { border: "1px solid #14D81C" }
-            }
-            value={emailInput}
-            onChange={handleEmailChange}
-            className="email-input-blog"
-            type="email"
-            placeholder="Example@redbery.ge"
-          />
-          {emailError && (
-            <div className="email-error-cont">
-              <img src={errorIcon} alt="error-icon" />
-              <p>{emailError}</p>
-            </div>
-          )}
+          
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             {allRigth ? (
               <button className="add-blog-submit-btn" type="submit">

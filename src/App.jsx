@@ -9,7 +9,7 @@ import BlogDetail from "./Pages/BlogDetail";
 export const context = createContext({});
 
 function App() {
-  const [userLogin, setUserLogin] = useState("loggedOut");
+  const [userLogin, setUserLogin] = useState(false);
 
 
   useEffect(() => {

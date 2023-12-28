@@ -10,10 +10,7 @@
   display: flex;
   padding: 40px 76px;
   align-items: flex-start;
-}
-
-.back-arrow {
-  margin-right: 240px;
+  justify-content: center;
 }
 
 .add-blog-main-title {
@@ -96,6 +93,7 @@ li {
   border: 1.5px solid #e4e3eb;
   border-radius: 12px;
   margin: 8px 0;
+  outline: none;
 }
 
 .add-blog-title {
@@ -199,7 +197,7 @@ textarea {
 }
 
 .email-input-blog {
-  width: 50%;
+  width: 100%;
   padding: 12px 16px;
   border-radius: 12px;
   border: 1.5px solid #e4e3eb;

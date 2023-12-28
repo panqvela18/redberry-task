@@ -11,7 +11,7 @@ import { context } from "../App";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () =>setOpen(true);
   const handleClose = () => setOpen(false);
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -22,22 +22,17 @@ export default function Header() {
     "4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
     const emailRegex = /^[a-zA-Z0-9._-]+@redberry\.ge$/;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!emailRegex.test(email)) {
-      setError("ელ-ფოსტა არ მოიძებნა");
-    } else {
-      setError("");
-      const response = await api.post("/login", { email: email });
-
-      loginContext.setUserLogin(true);
-      console.log(response);
-    }
-    
-
-   
-  };
-
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!emailRegex.test(email)) {
+        setError("ელ-ფოსტა არ მოიძებნა");
+      } else {
+        setError("");
+        const response = await api.post("/login", { email: email });
+        loginContext.handleLogin(); 
+        console.log(response);
+      }
+    };
   return (
     <header>
      <Link to={"/"}> <img src={logo} alt="logo" /></Link>
