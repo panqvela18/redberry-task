@@ -55,7 +55,7 @@ export default function BlogDetail() {
       <Header />
       <main className="blog-Detail-main-container-main">
         <div className="blog-Detail-main-container">
-          <Link to={"/"}>
+          <Link to={"/redberry-task"}>
             <img src={backArrow} alt="arrow" />
           </Link>
           <div className="blog-detail-container">
@@ -149,7 +149,7 @@ export default function BlogDetail() {
                               window.scrollTo({ top: 0, behavior: "smooth" });
                             }}
                             style={{ cursor: "pointer" }}
-                            to={`/blog/${blog.id}`}
+                            to={`/redberry-task/blog/${blog.id}`}
                           >
                             <button style={{cursor:"pointer"}} className="view-all-btn">
                               სრულად ნახვა

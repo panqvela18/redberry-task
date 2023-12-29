@@ -39,9 +39,9 @@ function App() {
     <context.Provider value={{ userLogin, setUserLogin, handleLogin,handleLogout }}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/add-blog" element={<AddBlog />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/redberry-task" element={<Home />} />
+          <Route path="/redberry-task/add-blog" element={<AddBlog />} />
+          <Route path="/redberry-task/blog/:id" element={<BlogDetail />} />
         </Routes>
       </BrowserRouter>
     </context.Provider>

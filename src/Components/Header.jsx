@@ -35,10 +35,10 @@ export default function Header() {
     };
   return (
     <header>
-     <Link to={"/"}> <img src={logo} alt="logo" /></Link>
+     <Link to={"/redberry-task"}> <img src={logo} alt="logo" /></Link>
       {loginContext.userLogin ? (
         <div>
-        <Link to={"/add-blog"}>
+        <Link to={"/redberry-task/add-blog"}>
           <button>დაამატე ბლოგი</button>
         </Link>
         <button onClick={()=>loginContext.handleLogout()} style={{marginLeft:"10px"}}>გასვლა</button>

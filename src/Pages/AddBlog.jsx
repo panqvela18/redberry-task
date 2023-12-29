@@ -203,7 +203,7 @@ export default function AddBlog() {
         userLoginContext.setUserLogin(true);
       } else {
         // If still not logged in, navigate to the home page
-        navigate("/");
+        navigate("/redberry-task");
       }
     }
   }, [userLoginContext.userLogin, userLoginContext.setUserLogin])
@@ -291,11 +291,11 @@ export default function AddBlog() {
 
   return (
     <>
-      <Link to={"/"} className="add-blog-head">
+      <Link to={"/redberry-task"} className="add-blog-head">
         <img src={logo} alt="logo" />
       </Link>
       <main className="add-blog-main-container">
-        <Link to={"/"}>
+        <Link to={"/redberry-task"}>
           <img className="back-arrow" src={backArrow} alt="arrow" />
         </Link>
         <form
@@ -572,7 +572,7 @@ export default function AddBlog() {
             <img src={checked} alt="checked" />
             <h3>ჩანაწი წარმატებით დაემატა</h3>
             <button>
-              <Link style={{ color: "white", textDecoration: "none" }} to={"/"}>
+              <Link style={{ color: "white", textDecoration: "none" }} to={"/redberry-task"}>
                 მთავარ გვერდზე დაბრუნება{" "}
               </Link>
             </button>

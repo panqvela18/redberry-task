@@ -12,6 +12,8 @@ export default function Home() {
   const [blogs, setBlogs] = useState([]);
   const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
 
+  console.log(categories)
+
 
   console.log(error);
 
@@ -152,7 +154,7 @@ export default function Home() {
                     onClick={() => {
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
-                    to={`blog/${blog.id}`}
+                    to={`/redberry-task/blog/${blog.id}`}
                   >
                     <button style={{cursor:"pointer"}} className="view-all-btn">სრულად ნახვა</button>
                   </Link>
