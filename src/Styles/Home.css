@@ -22,27 +22,31 @@
 .category-container {
   display: flex;
   /* justify-content: space-between; */
-  width: 50%;
+  width: 30%;
   /* align-items: center; */
-  overflow-x: auto;
+  overflow-x: scroll;
 }
 
 .category-container::-webkit-scrollbar {
-  width: 4px; /* Set the width of the scrollbar */
+  width: 4px;
 }
 
 .category-container::-webkit-scrollbar-thumb {
-  background-color: grey; /* Set the color of the scrollbar thumb */
-  border-radius: 8px; /* Set the border-radius of the scrollbar thumb */
-}
-.category-container {
-  scrollbar-width: thin; /* Set the width of the scrollbar */
+  background-color: grey;
+  border-radius: 8px;
+  height: 2px; /* Adjust the height as needed */
 }
 
 .category-container::-moz-scrollbar-thumb {
-  background-color: grey; /* Set the color of the scrollbar thumb */
-  border-radius: 8px; /* Set the border-radius of the scrollbar thumb */
+  background-color: grey;
+  border-radius: 8px;
+  height: 2px; /* Adjust the height as needed */
 }
+
+.category-container {
+  scrollbar-width: thin;
+}
+
 .categories-main-container {
   display: flex;
   justify-content: center;
@@ -105,12 +109,12 @@
   line-height: 28px;
   color: #1a1a1f;
   margin-bottom: 16px;
-  max-height: 56px;
+  min-height: 56px;
 }
 
 .blog-categories-cont {
   display: flex;
-  max-height: 56px;
+  min-height: 56px;
 }
 .blog-description {
   font-weight: 400;
@@ -118,7 +122,7 @@
   line-height: 28px;
   color: #404049;
   margin-bottom: 16px;
-  max-height: 56px;
+  min-height: 56px;
 }
 
 .view-all-contaner {

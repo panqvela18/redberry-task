@@ -11,9 +11,9 @@ export default function Home() {
   const [error, setError] = useState("");
   const [blogs, setBlogs] = useState([]);
   const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
-  console.log(selectedCategoriesId);
 
-  console.log(blogs);
+
+  console.log(error);
 
   const handleCategoryClick = (id) => {
     if (!selectedCategoriesId.includes(id)) {
@@ -124,10 +124,6 @@ export default function Home() {
                     <div className="blog-categories-cont">
                       <div className="blog-categories-cont">
                         {blog.categories.map((category) => {
-                          // const categoryStyles = mapCategoryToColors(
-                          //   categoryTitle,
-                          //   categories
-                          // );
                           return (
                             <button
                               key={category.id}

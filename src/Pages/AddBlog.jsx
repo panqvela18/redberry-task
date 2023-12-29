@@ -34,11 +34,14 @@ export default function AddBlog() {
   const [allRigth, setAllRigth] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedCategoriesId, setSelectedCategoriesId] = useState([]);
+  
+  const userLoginContext = useContext(context);
+  const navigate = useNavigate();
 
-  console.log(selectedCategoriesId)
+  console.log(selectedCategoriesId);
 
   const token =
-"4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
+    "4614b9bb546a70d4b1c6561260ef92216d76706de0eb845a23f0d61fd50c652a";
 
   const [open, setOpen] = useState(false);
   const handleClose = () => {
@@ -61,16 +64,12 @@ export default function AddBlog() {
   }, [selectedCategories, categories]);
 
   const handleCategoryClick = (category) => {
-    // Check if the maximum number of categories is already selected
     if (selectedCategories.length < 4) {
-      // Check if the category is already in the selectedCategories array
       if (!selectedCategories.includes(category)) {
-        // If not, add it to the array
         setSelectedCategories([...selectedCategories, category]);
       }
     }
   };
-  
 
   const getCategoryStyles = (categoryTitle) => {
     const category = categories.find((c) => c.title === categoryTitle);
@@ -81,7 +80,6 @@ export default function AddBlog() {
   };
 
   const handleCategoryClose = (category) => {
-    // Filter out the selected category from the array
     const updatedCategories = selectedCategories.filter(
       (selectedCategory) => selectedCategory !== category
     );
@@ -107,7 +105,7 @@ export default function AddBlog() {
   // }, [emailInput]);
   const handleEmailChange = (e) => {
     setEmailInput(e.target.value);
-    setEmailIsGood(0)
+    setEmailIsGood(0);
   };
 
   const handleAuthorInputChange = (e) => {
@@ -141,12 +139,11 @@ export default function AddBlog() {
     const descriptionCookie = Cookies.get(DESCRIPTION_COOKIE);
     const dateCookie = Cookies.get(DATE_COOKIE);
     const emailCookie = Cookies.get(EMAIL_COOKIE);
-   //სანახავიაა !!!!
+    //სანახავიაა !!!!
     const selectedCategoriesCookie = Cookies.get(SELECTED_CATEGORIES_COOKIE);
     const selectedCategoriesIdCookie = Cookies.get(
       SELECTED_CATEGORIES_ID_COOKIE
     );
-
 
     setSelectedCategories(
       selectedCategoriesCookie ? JSON.parse(selectedCategoriesCookie) : []
@@ -186,7 +183,7 @@ export default function AddBlog() {
   useEffect(() => {
     Cookies.set(SELECTED_CATEGORIES_COOKIE, JSON.stringify(selectedCategories));
   }, [selectedCategories]);
-  
+
   useEffect(() => {
     Cookies.set(
       SELECTED_CATEGORIES_ID_COOKIE,
@@ -194,15 +191,22 @@ export default function AddBlog() {
     );
   }, [selectedCategoriesId]);
 
-  // const userLoginContext = useContext(context)
-  // const navigate=useNavigate()
 
-  // useEffect(()=>{
-  //  if(!userLoginContext.userLogin){
-  //   navigate("/")
-  //  }
-  // })
-
+  
+  useEffect(() => {
+    // Check if the user is logged in when the component mounts
+    if (!userLoginContext.userLogin) {
+      // If not logged in, check localStorage for login status
+      const storedUserLogin = localStorage.getItem("userLogin");
+      if (storedUserLogin === "true") {
+        // If logged in, set the userLoginContext to true
+        userLoginContext.setUserLogin(true);
+      } else {
+        // If still not logged in, navigate to the home page
+        navigate("/");
+      }
+    }
+  }, [userLoginContext.userLogin, userLoginContext.setUserLogin])
 
   const fetchCategories = async () => {
     try {
@@ -219,14 +223,11 @@ export default function AddBlog() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-  
+
     if (file) {
       setImageFile(file);
     }
   };
-  
-  
-  
 
   const isValidGeorgian = (input) => {
     // Georgian script Unicode range: U+10A0 to U+10FF, and allow space
@@ -257,36 +258,36 @@ export default function AddBlog() {
   ]);
 
   const submitForm = async (e) => {
-  e.preventDefault();
-  try {
-    if(validateEmail()){
-      setOpen(true);
-      const formData = new FormData();
-      formData.append("title", titleInput);
-      formData.append("description", descriptionTextarea);
-      formData.append("image", imageFile); 
-      formData.append("author", authorInput);
-      formData.append("publish_date", selectedDate);
-      formData.append("categories", JSON.stringify(selectedCategoriesId));
-      formData.append("email", emailInput);
-  
-      await axios.post("https://api.blog.redberryinternship.ge/api/blogs", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    }else{
-      setEmailIsGood(1)
-    }
-   
-    
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+    e.preventDefault();
+    try {
+      if (validateEmail()) {
+        setOpen(true);
+        const formData = new FormData();
+        formData.append("title", titleInput);
+        formData.append("description", descriptionTextarea);
+        formData.append("image", imageFile);
+        formData.append("author", authorInput);
+        formData.append("publish_date", selectedDate);
+        formData.append("categories", JSON.stringify(selectedCategoriesId));
+        formData.append("email", emailInput);
 
-  
+        await axios.post(
+          "https://api.blog.redberryinternship.ge/api/blogs",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+      } else {
+        setEmailIsGood(1);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   return (
     <>
@@ -321,7 +322,10 @@ export default function AddBlog() {
               </p>
             </div>
           ) : (
-            <div className="uploaded-image-container">
+            <div
+              style={imageFile !== "" && { border: "1px solid #14D81C" }}
+              className="uploaded-image-container"
+            >
               <div className="image-and-image-name">
                 <img src={picIcon} alt="pic-icon" />
                 <span>{imageFile.name}</span>
@@ -343,6 +347,16 @@ export default function AddBlog() {
                 placeholder="შეიყვნეთ ავტორი"
                 onChange={handleAuthorInputChange}
                 value={authorInput}
+                style={
+                  authorInput.length >= 4 &&
+                  authorInput.split(" ").filter((word) => word !== "").length >
+                    1 &&
+                  isValidGeorgian(authorInput)
+                    ? { border: "1.5px solid #14D81C" }
+                    : authorInput.length === 0
+                    ? { border: "1px solid #E4E3EB" }
+                    : { border: "1.5px solid #EA1919" }
+                }
               />
               <ul>
                 <li
@@ -389,6 +403,13 @@ export default function AddBlog() {
                 placeholder="შეიყვნეთ სათაური"
                 onChange={handleTitleInputChange}
                 value={titleInput}
+                style={
+                  titleInput.length >= 4
+                    ? { border: "1.5px solid #14D81C" }
+                    : titleInput.length === 0
+                    ? { border: "1px solid #E4E3EB" }
+                    : { border: "1.5px solid #EA1919" }
+                }
               />
               <span
                 className="val-symbol"
@@ -409,6 +430,13 @@ export default function AddBlog() {
             onChange={handleTextAreaChange}
             placeholder="შეიყვნანეთ აღწერა"
             value={descriptionTextarea}
+            style={
+              descriptionTextarea.length >= 4
+                ? { border: "1.5px solid #14D81C" }
+                : descriptionTextarea.length === 0
+                ? { border: "1px solid #E4E3EB" }
+                : { border: "1.5px solid #EA1919" }
+            }
           />
           <span
             style={
@@ -433,36 +461,45 @@ export default function AddBlog() {
                 value={selectedDate}
               />
               <h4
-            style={{ marginTop: "24px", marginBottom: "8px" }}
-            className="add-blog-title"
-          >
-            ელ-ფოსტა *
-          </h4>
-          <input
-            style={
-              emailIsGood === 0
-                ? { border: "1px solid #E4E3EB" }
-                : emailIsGood === 1
-                ? { border: "1px solid #EA1919" }
-                : { border: "1px solid #14D81C" }
-            }
-            value={emailInput}
-            onChange={handleEmailChange}
-            className="email-input-blog"
-            type="email"
-            placeholder="Example@redbery.ge"
-          />
-          {emailIsGood === 1 && (
-            <div className="email-error-cont">
-              <img src={errorIcon} alt="error-icon" />
-              <p>ელ-ფოსტა არ მოიძებნა</p>
-            </div>
-          )}
+                style={{ marginTop: "24px", marginBottom: "8px" }}
+                className="add-blog-title"
+              >
+                ელ-ფოსტა *
+              </h4>
+              <input
+                style={
+                  emailIsGood === 0
+                    ? { border: "1px solid #E4E3EB" }
+                    : emailIsGood === 1
+                    ? { border: "1px solid #EA1919" }
+                    : { border: "1px solid #14D81C" }
+                }
+                value={emailInput}
+                onChange={handleEmailChange}
+                className="email-input-blog"
+                type="email"
+                placeholder="Example@redbery.ge"
+              />
+              {emailIsGood === 1 && (
+                <div className="email-error-cont">
+                  <img src={errorIcon} alt="error-icon" />
+                  <p>ელ-ფოსტა არ მოიძებნა</p>
+                </div>
+              )}
             </div>
             <div className="cont-category">
               <h5 className="add-blog-title">კატეგორია</h5>
               <div style={{ cursor: "pointer" }}>
-                <div className="selectCategory-cont">
+                <div
+                  className="selectCategory-cont"
+                  style={
+                    selectedCategories.length > 0
+                      ? { border: "1.5px solid #14D81C" }
+                      : descriptionTextarea.length === 0
+                      ? { border: "1px solid #E4E3EB" }
+                      : { border: "1.5px solid #EA1919" }
+                  }
+                >
                   {selectedCategories.length === 0
                     ? "შეიყვნეთ კატეგორია"
                     : selectedCategories.map((selectCategory) => {
@@ -473,7 +510,9 @@ export default function AddBlog() {
                             style={getCategoryStyles(selectCategory)}
                           >
                             {selectCategory}{" "}
-                            <img src={categoryXicon} alt="categoryXicon" />
+                            <div>
+                              <img src={categoryXicon} alt="categoryXicon" />
+                            </div>
                           </div>
                         );
                       })}
@@ -506,17 +545,18 @@ export default function AddBlog() {
               )}
             </div>
           </div>
-          
+
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             {allRigth ? (
-              <button className="add-blog-submit-btn" type="submit">
+              <button
+                style={{ cursor: "pointer" }}
+                className="add-blog-submit-btn"
+                type="submit"
+              >
                 გამოქვეყნება
               </button>
             ) : (
-              <button
-                disabled
-                className="add-blog-submit-btn-disable"
-              >
+              <button disabled className="add-blog-submit-btn-disable">
                 გამოქვეყნება
               </button>
             )}

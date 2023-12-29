@@ -121,7 +121,7 @@ export default function BlogDetail() {
                           style={{
                             display: "flex",
                             flexWrap: "wrap",
-                            maxHeight: "56px",
+                            minHeight: "56px",
                           }}
                         >
                           {blog.categories.map((category) => {
@@ -139,7 +139,7 @@ export default function BlogDetail() {
                             );
                           })}
                         </div>
-                        <p>
+                        <p style={{minHeight:"56px"}}>
                           {blog.description.split(" ").slice(0, 10).join(" ")}
                           ...
                         </p>
