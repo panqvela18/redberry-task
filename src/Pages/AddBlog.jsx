@@ -203,7 +203,7 @@ export default function AddBlog() {
         userLoginContext.setUserLogin(true);
       } else {
         // If still not logged in, navigate to the home page
-        navigate("/redberry-task");
+        navigate("/");
       }
     }
   }, [userLoginContext.userLogin, userLoginContext.setUserLogin])

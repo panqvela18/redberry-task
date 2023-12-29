@@ -116,7 +116,7 @@ export default function Home() {
               )
           ).map((blog) => {
             return (
-              <div className="blog-card-container">
+              <div key={blog.id} className="blog-card-container">
                 <div>
                   <img className="blog-card-main-image" src={blog.image} />
                   <span className="blog-author">{blog.author}</span>

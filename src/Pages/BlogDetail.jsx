@@ -106,9 +106,9 @@ export default function BlogDetail() {
               )
               .map((blog) => {
                 return (
-                  <SwiperSlide>
+                  <SwiperSlide key={blog.id}>
                     {
-                      <div key={blog.id} className="similar-blog-container">
+                      <div className="similar-blog-container">
                         <img
                           className="similar-blog-img"
                           src={blog.image}
@@ -140,7 +140,7 @@ export default function BlogDetail() {
                           })}
                         </div>
                         <p style={{minHeight:"56px"}}>
-                          {blog.description.split(" ").slice(0, 10).join(" ")}
+                          {blog.description.split(" ").slice(0, 8).join(" ")}
                           ...
                         </p>
                         <div className="view-all-contaner">
